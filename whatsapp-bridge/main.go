@@ -234,6 +234,30 @@ func extractTextContent(msg *waProto.Message) string {
 		return doc.GetCaption()
 	}
 
+	var result string
+
+	// Buttons messages
+	if buttons := msg.GetButtonsMessage(); buttons != nil {
+		result += buttons.GetContentText()
+		result += "\n\nButtons:"
+		for _, btn := range buttons.GetButtons() {
+			result += "\n- " + btn.GetButtonText().GetDisplayText()
+		}
+		return result
+	}
+
+	// List messages
+	if list := msg.GetListMessage(); list != nil {
+		result += list.GetDescription()
+		result += "\n\nList:"
+		for _, section := range list.GetSections() {
+			for _, row := range section.GetRows() {
+				result += "\n- " + row.GetTitle() + " — " + row.GetDescription()
+			}
+		}
+		return result
+	}
+
 	// No text content found
 	return ""
 }
