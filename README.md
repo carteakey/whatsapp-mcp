@@ -1,4 +1,7 @@
-# WhatsApp MCP Server
+# Revived WhatsApp MCP Server (carteakey/whatsapp-mcp)
+
+> [!NOTE]
+> This is a revived and updated fork of the original [lharries/whatsapp-mcp](https://github.com/lharries/whatsapp-mcp) repository. Since the original repository is unmaintained, this fork integrates all high-value upstream bug fixes, security enhancements, and features (including unread message tracking, media captions, safe document uploads, loopback REST security binding, etc.) while keeping `whatsmeow` and Go dependencies fully updated.
 
 This is a Model Context Protocol (MCP) server for WhatsApp.
 
@@ -9,8 +12,6 @@ It connects to your **personal WhatsApp account** directly via the Whatsapp web 
 Here's an example of what you can do when it's connected to Claude.
 
 ![WhatsApp MCP](./example-use.png)
-
-> To get updates on this and other projects I work on [enter your email here](https://docs.google.com/forms/d/1rTF9wMBTN0vPfzWuQa2BjfGKdKIpTbyeKxhPMcEzgyI/preview)
 
 > *Caution:* as with many MCP servers, the WhatsApp MCP is subject to [the lethal trifecta](https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/). This means that project injection could lead to private data exfiltration.
 
@@ -29,7 +30,7 @@ Here's an example of what you can do when it's connected to Claude.
 1. **Clone this repository**
 
    ```bash
-   git clone https://github.com/lharries/whatsapp-mcp.git
+   git clone https://github.com/carteakey/whatsapp-mcp.git
    cd whatsapp-mcp
    ```
 
