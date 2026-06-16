@@ -1,3 +1,6 @@
+import os
+from pathlib import Path
+
 from typing import List, Dict, Any, Optional
 from mcp.server.fastmcp import FastMCP
 from whatsapp import (
@@ -15,6 +18,9 @@ from whatsapp import (
     download_media as whatsapp_download_media,
     get_unread_messages as whatsapp_get_unread_messages
 )
+
+# Set uploads dir from env var.
+uploads_dir = os.getenv('WHATSAPP_UPLOADS_DIR', default=str(Path(__file__).absolute().parent / '../uploads'))
 
 # Initialize FastMCP server
 mcp = FastMCP("whatsapp")
@@ -208,7 +214,7 @@ def send_file(recipient: str, media_path: str) -> Dict[str, Any]:
     """
     
     # Call the whatsapp_send_file function
-    success, status_message = whatsapp_send_file(recipient, media_path)
+    success, status_message = whatsapp_send_file(recipient, media_path, uploads_dir)
     return {
         "success": success,
         "message": status_message
@@ -226,7 +232,7 @@ def send_audio_message(recipient: str, media_path: str) -> Dict[str, Any]:
     Returns:
         A dictionary containing success status and a status message
     """
-    success, status_message = whatsapp_audio_voice_message(recipient, media_path)
+    success, status_message = whatsapp_audio_voice_message(recipient, media_path, uploads_dir)
     return {
         "success": success,
         "message": status_message
