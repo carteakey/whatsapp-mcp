@@ -703,7 +703,7 @@ def validate_media_path(media_path: str, uploads_dir: str) -> bool:
     
     return True
 
-def send_file(recipient: str, media_path: str, uploads_dir: str) -> Tuple[bool, str]:
+def send_file(recipient: str, media_path: str, uploads_dir: str, caption: str = "") -> Tuple[bool, str]:
     try:
         # Validate input
         if not recipient:
@@ -722,7 +722,8 @@ def send_file(recipient: str, media_path: str, uploads_dir: str) -> Tuple[bool, 
         url = f"{WHATSAPP_API_BASE_URL}/send"
         payload = {
             "recipient": recipient,
-            "media_path": media_path
+            "media_path": media_path,
+            "message": caption
         }
         
         response = requests.post(url, json=payload)
