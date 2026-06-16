@@ -2,7 +2,7 @@ import sqlite3
 from dateutil import parser
 from datetime import datetime
 from dataclasses import dataclass
-from typing import Optional, List, Tuple
+from typing import Optional, List, Tuple, Dict, Any
 from pathlib import Path
 import os.path
 import requests
@@ -826,3 +826,46 @@ def download_media(message_id: str, chat_jid: str) -> Optional[str]:
     except Exception as e:
         print(f"Unexpected error: {str(e)}")
         return None
+
+def get_unread_messages(limit: int = 10) -> List[Dict[str, Any]]:
+    """Get chats that have unread messages."""
+    try:
+        conn = sqlite3.connect(MESSAGES_DB_PATH)
+        cursor = conn.cursor()
+        
+        cursor.execute("""
+            SELECT 
+                chats.jid,
+                chats.name,
+                chats.last_message_time,
+                chats.unread_count,
+                messages.content as last_message,
+                messages.sender as last_sender,
+                messages.is_from_me as last_is_from_me
+            FROM chats
+            LEFT JOIN messages ON chats.jid = messages.chat_jid 
+                AND chats.last_message_time = messages.timestamp
+            WHERE chats.unread_count > 0
+            ORDER BY chats.last_message_time DESC
+            LIMIT ?
+        """, (limit,))
+        
+        chats = cursor.fetchall()
+        result = []
+        for chat_data in chats:
+            result.append({
+                "jid": chat_data[0],
+                "name": chat_data[1],
+                "last_message_time": chat_data[2],
+                "unread_count": chat_data[3],
+                "last_message": chat_data[4],
+                "last_sender": chat_data[5],
+                "last_is_from_me": bool(chat_data[6]) if chat_data[6] is not None else None
+            })
+        return result
+    except sqlite3.Error as e:
+        print(f"Database error in get_unread_messages: {e}")
+        return []
+    finally:
+        if 'conn' in locals():
+            conn.close()
